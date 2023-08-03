@@ -88,7 +88,7 @@ def _evaluate(loss_fn, device, model, dataloader):
     return loss.item()
 
 
-@ray.remote(num_gpus=.3, num_cpus=4)
+@ray.remote(num_gpus=.05)
 def _evaluate_ray(loss_fn, device, model, dataloader):
     loss = torch.zeros(1).to(device)
     n_data = 0
@@ -99,7 +99,7 @@ def _evaluate_ray(loss_fn, device, model, dataloader):
         n_data+= data.shape[0]
     return loss.item()/n_data
 
-@ray.remote(num_gpus=.3, num_cpus=4)
+@ray.remote(num_gpus=.02)
 def _acc_ray(device, model, dataloader):
     training = model.training
     model.eval()

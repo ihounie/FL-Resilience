@@ -33,11 +33,17 @@ class ImbalanceFL(PrimalDualFedAlgorithm):
         # print('weights', weights)
         worst_acc = 1
         worst_loss = -1
+        worst_acc_test = 1
+        worst_loss_test = -1
         for i in range(len(sss.lambda_var)):
             if client_losses[i] > worst_loss:
                 worst_loss_idx = i
             if client_accs[i] < worst_acc:
                 worst_acc_idx = i
+            if client_losses_test[i] > worst_loss_test:
+                worst_loss_idx_test = i
+            if client_accs_test[i] < worst_acc_test:
+                worst_acc_idx_test = i
             wandb.log({f"lambda/client_{i}": sss.lambda_var[i].item()}) 
             wandb.log({f"loss/train/client_{i}": client_losses[i].item()}) 
             wandb.log({f"accuracy/train/client_{i}": client_accs[i].item()})
@@ -45,14 +51,14 @@ class ImbalanceFL(PrimalDualFedAlgorithm):
             wandb.log({f"accuracy/test/client_{i}": client_accs_test[i].item()})
         wandb.log({f"worst_loss/train": client_losses[worst_loss_idx].item(),"worst_loss_idx" : worst_loss_idx,
                      "worst_acc/train":client_accs[worst_acc_idx], "worst_acc_idx":worst_acc_idx})
-        wandb.log({f"worst_loss/test": client_losses_test[worst_loss_idx].item(),
-                    "worst_acc/test": client_accs_test[worst_acc_idx]})
+        wandb.log({f"worst_loss/test": client_losses_test[worst_loss_idx_test].item(),
+                    "worst_acc/test": client_accs_test[worst_acc_idx_test]})
         wandb.log({f"worst_lambda": sss.lambda_var[worst_loss_idx].item()})       
         wandb.log({f"lambda/mean": sss.lambda_var.mean().item(),
                     f"loss/train/mean": client_losses.mean().item(),
                     f"accuracy/train/mean": client_accs.mean().item(),
                     f"loss/test/mean": client_losses_test.mean().item(),
-                    f"accuracy/test/mean": client_accs_test.mean().item()}) 
+                    f"accuracy/test/mean": client_accs_test.mean().item()})
 
 ImFL_server_state_res = namedtuple("ImFL_server_state_res", ['global_round', 'model', 'lambda_var', 'perturbation'])
 
