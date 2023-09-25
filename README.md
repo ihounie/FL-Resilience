@@ -1,3 +1,3 @@
-# Recilient Constrained Learning
+# Resilient Constrained Learning
 
 Repo under Construction
